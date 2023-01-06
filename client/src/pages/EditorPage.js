@@ -1,5 +1,6 @@
+import toast from 'react-hot-toast';
 import React, { useEffect, useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import ACTIONS from '../Actions';
 import { initSocket } from '../socket';
@@ -23,11 +24,27 @@ const EditorPage = () => {
     },
   ])
 
+  const { roomId } = useParams();
   const location = useLocation();
+  const reactNavigator = useNavigate();
+
+  if (!location.state) {
+    <Navigate to="/" />
+  }
 
   useEffect(() => {
     const init = async () => {
       socketRef.current = await initSocket();
+
+      // WS error handling
+      socketRef.current.on("connect_error", (err) => handleErrors(err))
+      socketRef.current.on("connect_failed", (err) => handleErrors(err))
+
+      function handleErrors(e) {
+        console.log("Socket error: ", e);
+        toast.error('Socket connection failed, try again later');
+        reactNavigator('/');
+      }
 
     }
     init();
