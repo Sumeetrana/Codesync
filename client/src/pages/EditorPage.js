@@ -9,20 +9,7 @@ import Editor from '../components/Editor';
 
 const EditorPage = () => {
   const socketRef = useRef(null);
-  const [clients, setClients] = useState([
-    {
-      socketId: 1,
-      username: 'Harry P'
-    },
-    {
-      socketId: 2,
-      username: 'Emma W'
-    },
-    {
-      socketId: 3,
-      username: 'Ron W'
-    },
-  ])
+  const [clients, setClients] = useState([]);
 
   const { roomId } = useParams();
   const location = useLocation();
@@ -49,6 +36,14 @@ const EditorPage = () => {
       socketRef.current.emit(ACTIONS.JOIN, {
         roomId,
         username: location.state?.username
+      })
+
+      // listening joined event
+      socketRef.current.on(ACTIONS.JOINED, ({ clients, username, socketId }) => {
+        if (location.state?.username !== username) {
+          toast.success(`${username} joined`);
+        }
+        setClients(clients);
       })
     }
     init();
