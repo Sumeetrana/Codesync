@@ -52,6 +52,13 @@ io.on('connection', (socket) => {
     delete userSocketMap[socket.id];
     socket.leave();
   })
+
+  socket.on(ACTIONS.CODE_CHANGE, ({ roomId, code }) => {
+    // emitting code-change event to particular roomId
+    io.to(roomId).emit(ACTIONS.CODE_CHANGE, {
+      code
+    })
+  })
 })
 
 const PORT = process.env.PORT || 5000;
