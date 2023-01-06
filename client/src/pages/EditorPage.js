@@ -46,6 +46,10 @@ const EditorPage = () => {
         reactNavigator('/');
       }
 
+      socketRef.current.emit(ACTIONS.JOIN, {
+        roomId,
+        username: location.state?.username
+      })
     }
     init();
   }, []);
