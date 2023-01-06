@@ -11,12 +11,25 @@ const userSocketMap = {};
 
 const io = new Server(server);
 
+function getAllConnectedClients(roomId) {
+  return Array.from(io.sockets.adapter.rooms.get(roomId) || []).map(
+    (socketId) => {
+      return {
+        socketId,
+        username: userSocketMap[socketId]
+      }
+    }
+  )
+}
+
 io.on('connection', (socket) => {
   console.log('socket connection: ', socket.id);
 
   socket.on(ACTIONS.JOIN, ({ roomId, username }) => {
     userSocketMap[socket.id] = username;
     socket.join(roomId);
+    const clients = getAllConnectedClients(roomId);
+    console.log("Clients: ", clients);
   })
 })
 
