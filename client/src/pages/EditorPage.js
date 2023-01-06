@@ -63,6 +63,16 @@ const EditorPage = () => {
     }
   }, []);
 
+  const copyRoomId = async () => {
+    try {
+      await navigator.clipboard.writeText(roomId);
+      toast.success('Room ID has been copied')
+    } catch (error) {
+      toast.error('Could not copy Room ID')
+      console.log("Error: ", error);
+    }
+  }
+
   return (
     <div className='mainWrap'>
       <div className='aside'>
@@ -77,7 +87,7 @@ const EditorPage = () => {
             })}
           </div>
         </div>
-        <button className='btn copyBtn'>Copy ROOM ID</button>
+        <button className='btn copyBtn' onClick={copyRoomId}>Copy ROOM ID</button>
         <button className='btn leaveBtn'>Leave</button>
       </div>
       <div className="editorWrap">
