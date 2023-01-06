@@ -55,7 +55,7 @@ io.on('connection', (socket) => {
 
   socket.on(ACTIONS.CODE_CHANGE, ({ roomId, code }) => {
     // emitting code-change event to particular roomId
-    io.to(roomId).emit(ACTIONS.CODE_CHANGE, {
+    socket.in(roomId).emit(ACTIONS.CODE_CHANGE, {
       code
     })
   })
