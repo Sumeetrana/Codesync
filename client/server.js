@@ -38,6 +38,20 @@ io.on('connection', (socket) => {
       })
     })
   })
+
+  socket.on('disconnecting', () => {
+    // getting all the rooms in which this socket is connected to
+    const rooms = [...socket.rooms];
+    rooms.forEach((roomId) => {
+      // socket.in() - inside a particular room
+      socket.in(roomId).emit(ACTIONS.DISCONNECTED, {
+        socketId: socket.id,
+        username: userSocketMap[socket.id]
+      });
+    });
+    delete userSocketMap[socket.id];
+    socket.leave();
+  })
 })
 
 const PORT = process.env.PORT || 5000;
